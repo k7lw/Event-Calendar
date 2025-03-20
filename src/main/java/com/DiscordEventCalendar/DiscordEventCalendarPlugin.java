@@ -78,6 +78,7 @@ public class DiscordEventCalendarPlugin extends Plugin
 	{
 		if (event.getGroup().equals(DiscordEventCalendarConfig.GROUP))
 		{
+			// Using Switch incase adding config options
 			switch (event.getKey())
 			{
 				case "GUILD_ID":
