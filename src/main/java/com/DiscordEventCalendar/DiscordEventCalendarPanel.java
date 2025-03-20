@@ -18,15 +18,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class DiscordEventCalendarPanel extends PluginPanel {
-	private static final CalendarUtils calendar_util = new CalendarUtils();
-	private static final String begin = calendar_util.get_startDateTime();
-	private static final String end = calendar_util.get_endDateTime();
+	private static final String[] bundled_times = CalendarUtils.getCalendarStartAndEnd();
 	private static final ImageIcon REFRESH_ICON;
 
 	private JPanel actionsContainer;
@@ -109,7 +105,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		gbc.gridy = 1;
-		gbc.weighty = 0.6; // 60% of the height for eventListPanel
+		gbc.weighty = 0.6;
 		add(eventListPanel, gbc);
 
 		// Title Label
@@ -118,7 +114,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		titleLabel.setForeground(Color.WHITE);
 
 		gbc.gridy = 2;
-		gbc.weighty = 0.1; // 60% of the height for eventListPanel
+		gbc.weighty = 0.1;
 		add(bottom_buffer, gbc);
 
 		fetchAndDisplayEvents(); // Fetch events on load
@@ -133,7 +129,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		eventListPanel.removeAll(); // Clear previous events
 
 		new Thread(() -> {
-			SeshCalendarAPI seshApi = new SeshCalendarAPI(config.GUILD_ID(), begin, end);
+			SeshCalendarAPI seshApi = new SeshCalendarAPI(config.GUILD_ID(), bundled_times[0], bundled_times[1]);
 			List<DiscordEvent> events = seshApi.fetchEvents();
 			SwingUtilities.invokeLater(() -> {
 				if (!events.isEmpty()) {
@@ -262,9 +258,6 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 	}
 
 
-	/**
-	 * Helper function to create a dynamically resizing JTextArea.
-	 */
 	private JTextArea createDynamicTextArea(String text, Font font, Color color, int width) {
 		JTextArea textArea = new JTextArea(text);
 		textArea.setFont(font);
@@ -283,9 +276,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		return textArea;
 	}
 
-	/**
-	 * Displays a "No Events Found" message.
-	 */
+
 	private void displayNoEventsMessage() {
 		JLabel noEvents = new JLabel("No events found.");
 		noEvents.setForeground(Color.WHITE);

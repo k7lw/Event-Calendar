@@ -2,23 +2,9 @@ package com.DiscordEventCalendar;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 
 public class CalendarUtils {
-
-    private static String startDateTime;
-    private static String endDateTime;
-
-    public CalendarUtils() {
-        getCalendarStartAndEnd();
-    }
-    public static String get_startDateTime(){
-        return startDateTime;
-    }
-    public static String get_endDateTime(){
-        return endDateTime;
-    }
-    private static void getCalendarStartAndEnd() {
+    protected static String[] getCalendarStartAndEnd() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
         // Get system's current date and time zone
@@ -42,11 +28,9 @@ public class CalendarUtils {
             endOfCalendar = endOfCalendar.plusDays(1);
         }
 
-        // Convert to OffsetDateTime with UTC-08:00 offset (Pacific Time Standard)
-        ZonedDateTime local_startDateTime = startOfCalendar.atStartOfDay(zoneId);
-        ZonedDateTime local_endDateTime = endOfCalendar.atStartOfDay(zoneId);
-
-        startDateTime = local_startDateTime.format(formatter);
-        endDateTime = local_endDateTime.format(formatter);
+        return new String[] {
+                startOfCalendar.atStartOfDay(zoneId).format(formatter),
+                endOfCalendar.atStartOfDay(zoneId).format(formatter)
+        };
     }
 }

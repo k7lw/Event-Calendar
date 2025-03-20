@@ -24,8 +24,6 @@ public class SeshCalendarAPI {
             connection = (HttpURLConnection) requestUrl.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-            System.out.println("Request Sent");
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -56,7 +54,7 @@ public class SeshCalendarAPI {
         // Iterate through multiple events inside `"items"`
         while (itemsData.contains("\"id\"")) {
             int eventStart = itemsData.indexOf("{"); // Start of an event block
-            int eventEnd = itemsData.indexOf("}", eventStart) + 1; // Find the end of the event block
+            int eventEnd = itemsData.indexOf("}", eventStart); // Find the end of the event block
 
             if (eventStart == -1 || eventEnd == -1) break; // Stop if no more events
 
@@ -83,7 +81,6 @@ public class SeshCalendarAPI {
     public List<DiscordEvent> fetchEvents() {
         String jsonResponse = sendRequest(apiUrl);
         List<DiscordEvent> events = parseEvents(jsonResponse);
-
         // Sort events by start time
         events.sort(DiscordEvent::compareTo);
 
