@@ -31,7 +31,7 @@ public class SeshCalendarAPI {
             }
             reader.close();
         } catch (Exception e) {
-            System.err.println("Error fetching data from SeshCalendarAPI: " + e.getMessage());
+
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -44,7 +44,6 @@ public class SeshCalendarAPI {
         List<DiscordEvent> events = new ArrayList<>();
 
         if (!json.contains("\"native_events\":[")) {
-            System.err.println("Invalid API response: No items found");
             return events;
         }
 

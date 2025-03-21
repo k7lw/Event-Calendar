@@ -42,7 +42,6 @@ public class DiscordEvent implements Comparable<DiscordEvent> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy | hh:mm a");
             return localTime.format(formatter);
         } catch (Exception e) {
-            System.err.println("Error formatting event time: " + e.getMessage());
             return "Unknown Time";
         }
     }
@@ -52,7 +51,6 @@ public class DiscordEvent implements Comparable<DiscordEvent> {
             Instant instant = Instant.parse(timeStr); // Convert to UTC Instant
             return LocalDateTime.ofInstant(instant, ZoneId.systemDefault()); // Convert to local timezone
         } catch (Exception e) {
-            System.err.println("Error parsing time: " + timeStr);
             return LocalDateTime.MIN; // Use earliest possible time if invalid
         }
     }
