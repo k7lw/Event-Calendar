@@ -1,5 +1,6 @@
 package com.DiscordEventCalendar;
 
+import okhttp3.OkHttpClient;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import net.runelite.api.Client;
@@ -38,6 +39,11 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 
 	@Inject
 	private ScheduledExecutorService executor;
+
+	@Provides
+	OkHttpClient provideOkHttpClient() {
+		return new OkHttpClient();
+	}
 
 	@Provides
 	public DiscordEventCalendarConfig provideConfig(final ConfigManager configManager)
@@ -129,7 +135,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		eventListPanel.removeAll(); // Clear previous events
 
 		new Thread(() -> {
-			SeshCalendarAPI seshApi = new SeshCalendarAPI(config.GUILD_ID(), bundled_times[0], bundled_times[1]);
+			SeshCalendarAPI seshApi = new SeshCalendarAPI(provideOkHttpClient(), config.GUILD_ID(), bundled_times[0], bundled_times[1]);
 			List<DiscordEvent> events = seshApi.fetchEvents();
 			SwingUtilities.invokeLater(() -> {
 				if (!events.isEmpty()) {
