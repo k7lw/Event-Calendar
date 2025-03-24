@@ -40,10 +40,8 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 	@Inject
 	private ScheduledExecutorService executor;
 
-	@Provides
-	OkHttpClient provideOkHttpClient() {
-		return new OkHttpClient();
-	}
+	@Inject
+	private OkHttpClient httpClient;
 
 	@Provides
 	public DiscordEventCalendarConfig provideConfig(final ConfigManager configManager)
@@ -135,7 +133,7 @@ public class DiscordEventCalendarPanel extends PluginPanel {
 		eventListPanel.removeAll(); // Clear previous events
 
 		new Thread(() -> {
-			SeshCalendarAPI seshApi = new SeshCalendarAPI(provideOkHttpClient(), config.GUILD_ID(), bundled_times[0], bundled_times[1]);
+			SeshCalendarAPI seshApi = new SeshCalendarAPI(httpClient, config.GUILD_ID(), bundled_times[0], bundled_times[1]);
 			List<DiscordEvent> events = seshApi.fetchEvents();
 			SwingUtilities.invokeLater(() -> {
 				if (!events.isEmpty()) {
