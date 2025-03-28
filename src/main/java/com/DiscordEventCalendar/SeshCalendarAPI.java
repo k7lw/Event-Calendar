@@ -34,7 +34,7 @@ public class SeshCalendarAPI {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error fetching data: " + e.getMessage());
+            return "invalid request";
         }
         return "";
     }
